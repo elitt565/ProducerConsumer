@@ -36,14 +36,14 @@ pub fn InitBank(num_workers: u32, filename: String) {
     let mut bank_obj;
     unsafe {
         &*lazy_bank_obj;
-        bank_obj = *Lazy::get(&lazy_bank_obj).unwrap();
+        bank_obj = *Lazy::get_mut(&mut lazy_bank_obj).unwrap();
         bank_obj.print_account();
     }
     load_ledger(filename);
     let n = num_workers;
     thread::spawn(move || {
         for i in 1..=n {
-            worker(i);
+            worker(i, &mut bank_obj);
         }
     }).join().unwrap();
     bank_obj.print_account();
@@ -89,12 +89,7 @@ pub fn load_ledger(filename: String) {
  *
  * @param workerID: ID of worker thread that is running at the moment
  */
-fn worker(workerID: u32) {
-    let bank_obj;
-    unsafe {
-        &*lazy_bank_obj;
-        bank_obj = Lazy::get_mut(&mut lazy_bank_obj).unwrap();
-    }
+fn worker(workerID: u32, bank_obj: &mut Bank) {
     let mut g = ledger_lock.lock().unwrap();
     unsafe {
         while !ledger.is_empty() {

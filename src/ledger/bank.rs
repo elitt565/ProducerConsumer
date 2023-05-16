@@ -2,6 +2,8 @@ use std::sync::Mutex;
 
 static bank_lock: Mutex<u32> = Mutex::new(0);
 static mut accounts: Vec<Account> = Vec::new();
+static mut num_succ: u32 = 0;
+static mut num_fail: u32 = 0;
 
 pub struct Account {
     accountID: u32,
@@ -11,9 +13,7 @@ pub struct Account {
 
 #[derive(Clone, Copy)]
 pub struct Bank {
-    num: u32,
-    num_succ: u32,
-    num_fail: u32,
+    num: u32
 }
 
 impl Bank {
@@ -25,9 +25,7 @@ impl Bank {
      */
     pub fn new(N: u32) -> Bank {
         let mut b = Bank {
-            num: N,
-            num_succ: 0,
-            num_fail: 0,
+            num: N
         };
         for i in 0..N {
             let acc = Account {
@@ -38,6 +36,10 @@ impl Bank {
             unsafe {
                 accounts.push(acc);
             }
+        }
+        unsafe {
+            num_succ = 0;
+            num_fail = 0;
         }
         return b;
     }
@@ -162,7 +164,7 @@ impl Bank {
     /**
      * @brief prints account information
      */
-    pub fn print_account(self) {
+    pub fn print_account(&self) {
         for i in 0..self.num {
             unsafe {
                 let mut g = accounts.get(i as usize).unwrap().lock.lock().unwrap();
@@ -171,7 +173,9 @@ impl Bank {
             }
         }
         let mut g = bank_lock.lock().unwrap();
-        println!("Success: {} Fails: {}", self.num_succ, self.num_fail);
+        unsafe {
+            println!("Success: {} Fails: {}", num_succ, num_fail);
+        }
         drop(g);
     }
     /**
@@ -183,7 +187,9 @@ impl Bank {
     fn recordSucc(&mut self, message: String) {
         let mut g = bank_lock.lock().unwrap();
         println!("{}", message);
-        self.num_succ += 1;
+        unsafe {
+            num_succ = num_succ + 1;
+        }
         drop(g);
     }
     /**
@@ -195,7 +201,9 @@ impl Bank {
     fn recordFail(&mut self, message: String) {
         let mut g = bank_lock.lock().unwrap();
         println!("{}", message);
-        self.num_fail += 1;
+        unsafe {
+            num_fail = num_fail + 1;
+        }
         drop(g);
     }
 }
