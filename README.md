@@ -1,7 +1,7 @@
 # ProducerConsumer
 Rust version of Project4_377 Producer_Consumer
 
-Link to video presentation: https://drive.google.com/file/d/1xDAPnz68gfSBUtqhylg38ezKufbQ6bOc/view
+Link to video presentation: https://drive.google.com/file/d/1mPiyD11iZuSdOFiPG4pPP9LU4VK35HyR/view?usp=sharing
 
 # Design
 This project is based on the fourth project in the class CS377 in the Spring Semester 2023.
