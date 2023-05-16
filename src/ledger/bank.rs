@@ -41,18 +41,6 @@ impl Bank {
         }
         return b;
     }
-    /**
-     * @brief Destroy the Bank:: Bank object by freeing all memory and destroying
-     * all locks
-     */
-    pub fn drop(&mut self) {
-        //TODO: finish this method (drop/destroy)
-        // pthread_mutex_destroy(&bank_lock);
-        // for(int i = 0; i < num; i++) {
-        //     pthread_mutex_destroy(&((accounts + i) -> lock));
-        // }
-        // free(accounts);
-    }
 
     //Functions With Accounts
 
@@ -70,15 +58,8 @@ impl Bank {
     pub fn deposit(&mut self, workerID: u32, ledgerID: u32, accountID: usize, amount: u32) -> i32 {
         unsafe {
             let mut g = accounts.get(accountID).unwrap().lock.lock().unwrap();
-            // TODO: Find a way to update balance or use method below:
-            // let oldAcc = accounts.get(accountID).unwrap();
-            // let newAcc = Account {
-            //     accountID: oldAcc.accountID,
-            //     balance: oldAcc.balance + amount,
-            //     lock: Mutex::new(0),
-            // };
-            // accounts.push(newAcc);
-            // accounts.swap_remove(accountID);
+            let acc = accounts.get_mut(accountID).unwrap();
+            acc.balance = acc.balance + amount;
             self.recordSucc(format!("Worker {} completed ledger {}: deposit {} from account {}", workerID, ledgerID, amount, accountID));
             drop(g);
         }
@@ -111,15 +92,8 @@ impl Bank {
                 drop(g);
                 return -1;
             }
-            // TODO: Find a way to update balance or use method below:
-            // let oldAcc = accounts.get(accountID).unwrap();
-            // let newAcc = Account {
-            //     accountID: oldAcc.accountID,
-            //     balance: oldAcc.balance - amount,
-            //     lock: Mutex::new(0),
-            // };
-            // accounts.push(newAcc);
-            // accounts.swap_remove(accountID);
+            let acc = accounts.get_mut(accountID).unwrap();
+            acc.balance = acc.balance - amount;
             self.recordSucc(success);
             drop(g);
         }
@@ -172,26 +146,13 @@ impl Bank {
                 drop(g1);
                 return -1;
             }
-            // TODO: Find a way to update balance or use method below:
-            // let oldSrcAcc = accounts.get(dest_id).unwrap();
-            // let newSrcAcc = Account {
-            //     accountID: oldSrcAcc.accountID,
-            //     balance: oldSrcAcc.balance - amount,
-            //     lock: Mutex::new(0),
-            // };
-            // accounts.push(newSrcAcc);
-            // accounts.swap_remove(src_id);
-            // let oldDestID = accounts.get(dest_id).unwrap();
-            // let newDestID = Account {
-            //     accountID: oldDestID.accountID,
-            //     balance: oldDestID.balance - amount,
-            //     lock: Mutex::new(0),
-            // };
-            // accounts.push(newDestID);
-            // accounts.swap_remove(dest_id);
-            // self.recordSucc(success);
-            // drop(g2);
-            // drop(g1);
+            let srcAcc = accounts.get_mut(src_id).unwrap();
+            let destAcc = accounts.get_mut(dest_id).unwrap();
+            srcAcc.balance = srcAcc.balance - amount;
+            destAcc.balance = destAcc.balance + amount;
+            self.recordSucc(success);
+            drop(g2);
+            drop(g1);
         }
         return 0;
     }

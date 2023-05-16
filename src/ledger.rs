@@ -47,7 +47,6 @@ pub fn InitBank(num_workers: u32, filename: String) {
         }
     }).join().unwrap();
     bank_obj.print_account();
-    bank_obj.drop();
 }
 
 /**
