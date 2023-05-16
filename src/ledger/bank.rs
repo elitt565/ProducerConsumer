@@ -74,10 +74,10 @@ impl Bank {
      * "Worker [workerID] failed to complete ledger [ledgerID]: withdraw [amount]
      * from account [accountID]"
      *
-     * @param workerID the ID of the worker (thread)
-     * @param ledgerID the ID of the ledger entry
-     * @param accountID the account ID to withdraw
-     * @param amount the amount withdrawn
+     * @param workerID: the ID of the worker (thread)
+     * @param ledgerID: the ID of the ledger entry
+     * @param accountID: the account ID to withdraw
+     * @param amount: the amount withdrawn
      * @return int 0 on success -1 on failure
      */
     pub fn withdraw(&mut self, workerID: u32, ledgerID: u32, accountID: usize, amount: u32) -> i32 {
@@ -108,11 +108,11 @@ impl Bank {
      * "Worker [workerID] failed to complete ledger [ledgerID]: transfer [amount] from
      * account [srcID] to account [destID]"
      *
-     * @param workerID the ID of the worker (thread)
-     * @param ledgerID the ID of the ledger entry
-     * @param srcID the account to transfer money out
-     * @param destID the account to receive the money
-     * @param amount the amount to transfer
+     * @param workerID: the ID of the worker (thread)
+     * @param ledgerID: the ID of the ledger entry
+     * @param srcID: the account to transfer money out
+     * @param destID: the account to receive the money
+     * @param amount: the amount to transfer
      * @return int 0 on success -1 on error
      */
     pub fn transfer(&mut self, workerID: u32, ledgerID: u32, src_id: usize, dest_id: usize, amount: u32) -> i32 {
