@@ -8,6 +8,7 @@ use std::str;
 use std::collections::VecDeque;
 use std::thread;
 use std::sync::Mutex;
+use std::time::Duration;
 use once_cell::sync::Lazy;
 
 static ledger_lock: Mutex<u32> = Mutex::new(0);
@@ -40,12 +41,13 @@ pub fn InitBank(num_workers: u32, filename: String) {
         bank_obj.print_account();
     }
     load_ledger(filename);
-    let n = num_workers;
-    thread::spawn(move || {
-        for i in 1..=n {
-            worker(i, &mut bank_obj);
+    crossbeam::scope(|scope| {
+        for i in 0..num_workers {
+            scope.spawn(move |_| {
+                worker(i, &mut bank_obj);
+            });
         }
-    }).join().unwrap();
+    }).unwrap();
     bank_obj.print_account();
 }
 
@@ -88,6 +90,7 @@ pub fn load_ledger(filename: String) {
  * function indicated by "mode" in struct Ledger.
  *
  * @param workerID: ID of worker thread that is running at the moment
+ * @param bank_obj: the bank
  */
 fn worker(workerID: u32, bank_obj: &mut Bank) {
     let mut g = ledger_lock.lock().unwrap();

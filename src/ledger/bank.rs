@@ -37,10 +37,6 @@ impl Bank {
                 accounts.push(acc);
             }
         }
-        unsafe {
-            num_succ = 0;
-            num_fail = 0;
-        }
         return b;
     }
 

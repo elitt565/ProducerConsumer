@@ -3,5 +3,5 @@ use crate::ledger::InitBank;
 
 fn main() {
     //TODO: implement tests and check implementation in all methods
-    InitBank(4, format!("pressure_test.txt"));
+    InitBank(4, format!("ledger.txt"));
 }
