@@ -125,7 +125,7 @@ It goes through ledger from the beginning to the end, removing the ledger that i
 
 ## Bank.rs
 ### Bank.rs- Bank struct
-The bank struct has only one u32 variable.  It is below:
+The Bank struct has only one u32 variable.  It is below:
 ```
 num => the number of accounts in the bank
 ```
@@ -133,6 +133,14 @@ num => the number of accounts in the bank
 I choose to move all the other variables that were in the bank struct in the c++ version of the project to be global variables because mutexes and vectors cannot be copied (meaning it was excessively difficult to impossible to pass around references to the bank struct and modify them) and num_succ and num_fail made more sense to be global to me.
 
 ### Bank.rs- Account struct
+The Account struct has only 3 variables.  It is below:
+```
+accountID => the ID of the account
+balance => the total balance of the account
+lock => a lock to ensure that an Account is modified by multiple threads at a time
+```
+
+The balance is public but in order to allow for modification of the account's balance.
 
 ### Bank.rs- global variables
 The Ledger.rs file contains 3 global variables.  They are as follows:
@@ -197,3 +205,46 @@ amount => the amount to transfer
 ```
 
 This function transfers amount from srcID to destID.  A success is recorded with the following statement:
+This function withdraws amount from accountID.  A success is recorded with the following statement:
+```
+"Worker [workerID] completed ledger [ledgerID]: transfer [amount] from account [srcID] to account [destID]"
+```
+
+And a failure is recorded with the following statement:
+```
+"Worker [workerID] failed to complete ledger [ledgerID]: transfer [amount] from account [srcID] to account [destID]"
+```
+
+If it is a success, the function returns 0.  If it is a failure, the function returns -1.
+
+### Bank.rs- print_account
+This method prints out the current balance each account in the bank and the number of successful and failed ledgers in the following format:
+```
+ID# 0 | 0
+ID# 1 | 0
+ID# 2 | 0
+ID# 3 | 0
+ID# 4 | 0
+ID# 5 | 0
+ID# 6 | 0
+ID# 7 | 0
+ID# 8 | 0
+ID# 9 | 0
+Success: 0 Fails: 0
+```
+
+### Bank.rs- recordSucc
+This method takes in one variable:
+```
+message => the string to print
+```
+
+This method increments the number of sucesses by one and prints the message.
+
+### Bank.rs- recordFail
+This method takes in one variable:
+```
+message => the string to print
+```
+
+This method increments the number of failures by one and prints the message.
