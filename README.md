@@ -132,6 +132,8 @@ num => the number of accounts in the bank
 
 I choose to move all the other variables that were in the bank struct in the c++ version of the project to be global variables because mutexes and vectors cannot be copied (meaning it was excessively difficult to impossible to pass around references to the bank struct and modify them) and num_succ and num_fail made more sense to be global to me.
 
+### Bank.rs- Account struct
+
 ### Bank.rs- global variables
 The Ledger.rs file contains 3 global variables.  They are as follows:
 ```
@@ -154,7 +156,7 @@ This method takes in four variables:
 ```
 workerID => the ID of the worker (thread)
 ledgerID => the ID of the ledger entry
-accountID => the account ID to deposit
+accountID => the account ID to deposit to
 amount => the amount deposited
 ```
 
@@ -163,3 +165,35 @@ This function deposits amount into accountID, records a success with the followi
 "Worker [workerID] completed ledger [ledgerID]: deposit [amount] into account [accountID]"
 ```
 
+### Bank.rs- withdraw
+This method takes in four variables:
+```
+workerID => the ID of the worker (thread)
+ledgerID => the ID of the ledger entry
+accountID => the account ID to withdraw from
+amount => the amount withdrew
+```
+
+This function withdraws amount from accountID.  A success is recorded with the following statement:
+```
+"Worker [workerID] completed ledger [ledgerID]: withdraw [amount] from account [accountID]"
+```
+
+And a failure is recorded with the following statement:
+```
+"Worker [workerID] failed to complete ledger [ledgerID]: withdraw [amount] from account [accountID]"
+```
+
+If it is a success, the function returns 0.  If it is a failure, the function returns -1.
+
+### Bank.rs- transfer
+This method takes in five variables:
+```
+workerID => the ID of the worker (thread)
+ledgerID => the ID of the ledger entry
+srcID => the account to transfer money out
+destID => the account to receive the money
+amount => the amount to transfer
+```
+
+This function transfers amount from srcID to destID.  A success is recorded with the following statement:
