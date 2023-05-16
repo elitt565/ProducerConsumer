@@ -13,7 +13,9 @@ In order to build this project, in the terminal type:
 cargo build
 ```
 
-In orderto run this project, in the terminal type:
+In order to run this project, in the terminal type:
 ```
 cargo run
 ```
+
+###
